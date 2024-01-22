@@ -39,7 +39,7 @@ jobs:
     - name: Echo all
       run: echo $GITHUB_OUTPUT
   deploy-docker-dev:
-   # if: github.ref == 'main'
+    if: github.ref == 'refs/heads/main'
     needs: [ Build ]
     uses: ./.github/workflows/deploy_docker.yml
     with:
