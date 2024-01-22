@@ -10,9 +10,17 @@ on:
   push:
     branches:   [main]
 
+concurrency:
+  group: environment-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  get-version:
+    outputs:
+      version: ${{ steps.output_version.outputs.version }}
+      sha_short: ${{ steps.sha_short.outputs.sha_short }}
+      fullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}
+    runs-on: ubuntu-latest
   build:
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -42,10 +50,22 @@ jobs:
       with:
         context: .
         file: docker/Dockerfile
-        tags: textractpoc:latest, textractpoc:${{ needs.get-version.outputs.version}}, textractpoc:${{ needs.get-version.outputs.sha_short}}
-        outputs: type=docker,dest=/tmp/textractPoc.tar   
+                - name: Build and push
+                uses: docker/build-push-action@v3
+                with:
+                  context: .
+                  file: docker/Dockerfile
+                  tags: |
+                    textractpoc:latest
+                    textractpoc:${{ needs.get-version.outputs.version}}
+                    textractpoc:${{ needs.get-version.outputs.sha_short}}
+                  outputs: type=docker,dest=/tmp/textractpoc.tar
+
+        outputs: type=docker,dest=/tmp/textractpoc.tar
         
   deploy-docker-dev:
+    if: github.ref == 'refs/heads/main'
+    needs: [ Build ]
     uses: ./.github/workflows/deploy_docker.yml
     with:
       version_label: ${{ needs.get-version.outputs.version }}_${{ needs.get-version.outputs.sha_short }}
