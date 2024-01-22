@@ -36,10 +36,10 @@ jobs:
         uses: actions/cache@v3
         with:
           key: ${{ github.sha }}
-          path: /tmp/textractPoc.tar
+          path: /tmp/textractpoc.tar
       - name: Load Docker image
         run: |
-          docker load --input /tmp/textractPoc.tar
+          docker load --input /tmp/textractpoc.tar
           docker image ls -a
       # todo: https://docs.github.com/en/actions/deployment/deploying-to-your-cloud-provider/deploying-to-amazon-elastic-container-service
       # upload to registry
