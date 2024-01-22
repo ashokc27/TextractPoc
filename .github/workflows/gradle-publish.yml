@@ -29,17 +29,16 @@ jobs:
     - name: Make gradlew executable
       run: chmod +x ./gradlew
 
-    - name: Build with Gradle
+    - name: Build
       uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
       with:
         arguments: build
 
-    # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
-    # the publishing section of your build.gradle
-    - name: Publish to GitHub Packages
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      with:
-        arguments: publish
-      env:
-        USERNAME: ${{ github.actor }}
-        TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  deploy-docker-dev:
+    if: github.ref == 'main'
+    needs: [ Build ]
+    uses: ./.github/workflows/deploy_docker.yml
+    with:
+      version_label: ${{ needs.get-version.outputs.version }}_${{ needs.get-version.outputs.sha_short }}
+      environment: dev
+    secrets: inherit
