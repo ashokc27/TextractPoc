@@ -17,7 +17,7 @@ on:
         required: true
 
 env:
-  ECR_REPOSITORY: onboarding
+  ECR_REPOSITORY: textractpoc
   ECR_REGISTRY: ${{ vars.ECR_REGISTRY }}
   EKS_DEPLOYMENT: ${{ vars.EKS_DEPLOYMENT }}
   EKS_NAMESPACE: ${{ vars.EKS_NAMESPACE }}
