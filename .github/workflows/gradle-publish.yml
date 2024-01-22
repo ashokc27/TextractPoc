@@ -42,7 +42,7 @@ jobs:
       with:
         context: .
         file: docker/Dockerfile
-        tags: onboarding:latest, textractpoc:${{ needs.get-version.outputs.version}}, textractpoc:${{ needs.get-version.outputs.sha_short}}
+        tags: textractpoc:latest, textractpoc:${{ needs.get-version.outputs.version}}, textractpoc:${{ needs.get-version.outputs.sha_short}}
         outputs: type=docker,dest=/tmp/textractPoc.tar   
         
   deploy-docker-dev:
