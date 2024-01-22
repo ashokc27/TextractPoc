@@ -75,7 +75,8 @@ jobs:
         context: .
         file: docker/Dockerfile
         tags: |
-          textractpoc:latest, textractpoc:${{ needs.get-version.outputs.version}}, textractpoc:${{ needs.get-version.outputs.sha_short}}
+          textractpoc:latest
+          textractpoc:${{ github.sha }}
         outputs: type=docker,dest=/tmp/textractpoc.tar
 
   deploy-docker-dev:
