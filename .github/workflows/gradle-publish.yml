@@ -15,6 +15,35 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  get-version:
+    outputs:
+      version: ${{ steps.output_version.outputs.version }}
+      sha_short: ${{ steps.sha_short.outputs.sha_short }}
+      fullSemVer: ${{ steps.gitversion.outputs.fullSemVer }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: '5.x'
+      - name: Execute GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.15
+        with:
+          useConfigFile: true
+      - name: Display GitVersion outputs
+        run: |
+          echo "GITVERSION_MAJORMINORPATCH: $GITVERSION_MAJORMINORPATCH"
+      - id: output_version
+        run: echo "version=$GITVERSION_MAJORMINORPATCH" >> $GITHUB_OUTPUT
+      - id: FullSemVer
+        run: echo "FullSemVer=$GITVERSION_FullSemVer" >> $GITHUB_OUTPUT
+      - name: Set output sha_short
+        id: sha_short
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
   build:
     runs-on: ubuntu-latest
     permissions:
