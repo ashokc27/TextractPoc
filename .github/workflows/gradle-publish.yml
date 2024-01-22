@@ -45,19 +45,9 @@ jobs:
       with:
         context: .
         file: docker/Dockerfile
-                - name: Build and push
-                uses: docker/build-push-action@v3
-                with:
-                  context: .
-                  file: docker/Dockerfile
-                  tags: |
-                    textractpoc:latest
-                    textractpoc:${{ needs.get-version.outputs.version}}
-                    textractpoc:${{ needs.get-version.outputs.sha_short}}
-                  outputs: type=docker,dest=/tmp/textractpoc.tar
-
+        tags: textractpoc:latest, textractpoc:${{ needs.get-version.outputs.version}}, textractpoc:${{ needs.get-version.outputs.sha_short}}
         outputs: type=docker,dest=/tmp/textractpoc.tar
-        
+
   deploy-docker-dev:
     if: github.ref == 'refs/heads/main'
     needs: [ Build ]
