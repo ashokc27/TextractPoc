@@ -5,6 +5,10 @@ WORKDIR /application
 
 COPY build/libs/*-all.jar ROOT.jar
 
+# Output the image ID to a file
+RUN echo $(docker history -q --no-trunc $(docker build -q .)) > image-id.txt
+
+
 EXPOSE 8080
 
 CMD java ${JAVA_OPTS} -jar ROOT.jar
