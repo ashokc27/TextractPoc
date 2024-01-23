@@ -5,9 +5,18 @@ FROM eclipse-temurin:17-jdk-jammy AS builder
 WORKDIR /app
 
 # Copy the Gradle files and dependencies to leverage caching
-RUN ls -lrt
+COPY build.gradle .
+COPY settings.gradle .
+COPY gradle ./gradle
 
-RUN java -Djarmode=layertools -jar ROOT.jar extract
+# Download the dependencies
+RUN ./gradlew --version
+
+# Copy the application source code
+COPY src ./src
+
+# Build the application
+RUN ./gradlew build --no-daemon
 
 # Use a lightweight base image for the application
 FROM eclipse-temurin:17-jdk-jammy
