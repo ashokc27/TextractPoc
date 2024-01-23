@@ -3,7 +3,7 @@ FROM eclipse-temurin:17-jdk-jammy AS builder
 
 WORKDIR /application
 
-COPY target/textactpoc-*.jar  ROOT.jar
+COPY build/libs/*-all.jar ROOT.jar
 
 EXPOSE 8080
 
