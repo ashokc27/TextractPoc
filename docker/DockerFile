@@ -13,10 +13,11 @@ COPY gradle ./gradle
 RUN apt-get update && apt-get install -y unzip
 
 # Download the specified Gradle version
-RUN curl -s "https://services.gradle.org/distributions/gradle-7.6.1-bin.zip" -o gradle.zip \
+RUN curl -L -o gradle.zip "https://services.gradle.org/distributions/gradle-{VERSION}-bin.zip" \
     && unzip gradle.zip \
     && mv gradle-{VERSION} gradle \
     && rm gradle.zip
+
 
 # Add Gradle to the PATH
 ENV PATH="/app/gradle/bin:${PATH}"
