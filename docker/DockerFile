@@ -16,7 +16,7 @@ COPY gradle ./gradle
 COPY src ./src
 
 # Build the application
-RUN ./gradlew build --no-daemon
+RUN gradle bootJar --no-daemon --stacktrace
 
 # Use a lightweight base image for the application
 FROM eclipse-temurin:17-jdk-jammy
