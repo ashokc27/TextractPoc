@@ -1,53 +1,8 @@
-# Use a base image with Java 17 and Gradle
-FROM eclipse-temurin:17-jdk-jammy AS builder
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the Gradle files and dependencies to leverage caching
-COPY build.gradle .
-COPY settings.gradle .
-COPY gradle ./gradle
-
-# Install unzip
-RUN apt-get update && apt-get install -y unzip
-
-# Download the specified Gradle version
-RUN curl -L -o gradle.zip "https://services.gradle.org/distributions/gradle-{VERSION}-bin.zip" \
-    && unzip gradle.zip \
-    && mv gradle-{VERSION} gradle \
-    && rm gradle.zip
-
-
-# Add Gradle to the PATH
-ENV PATH="/app/gradle/bin:${PATH}"
-
-# Copy the application source code
-COPY src ./src
-
-# Build the application
-RUN gradle --version
-
-# ... rest of your Dockerfile
-
-
-# Copy the application source code
-COPY src ./src
-
-# Build the application
-RUN gradle bootJar --no-daemon --stacktrace
-
-# Use a lightweight base image for the application
-FROM eclipse-temurin:17-jdk-jammy
-
-# Set the working directory
-WORKDIR /app
-
-# Copy the JAR file from the builder stage
-COPY --from=builder /app/build/libs/textractpoc*.jar app.jar
-
-# Expose the application port
+FROM openjdk:17-alpine
+WORKDIR /home/app
+COPY layers/libs /home/app/libs
+COPY layers/classes /home/app/classes
+COPY layers/resources /home/app/resources
+COPY layers/application.jar /home/app/application.jar
 EXPOSE 8080
-
-# Command to run the application
-CMD ["java", "-jar", "app.jar","org.springframework.boot.loader.JarLauncher"]
+ENTRYPOINT ["java", "-jar", "/home/app/application.jar"]
