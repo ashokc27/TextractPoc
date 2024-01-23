@@ -78,12 +78,14 @@ jobs:
           textractpoc:latest
           textractpoc:${{ github.sha }}
         outputs: type=docker,dest=/tmp/textractpoc.tar
-
+    - name: Build Docker Image
+      run: |
+        docker build -t textractpoc:latest .
     - name: Cache Docker Image
       uses: actions/cache@v3
       with:
         key: ${{ github.sha }}
-        path: /tmp/onboarding.tar
+        path: /tmp/textractpoc.tar
 
   deploy-docker-dev:
     if: github.ref == 'refs/heads/main'
