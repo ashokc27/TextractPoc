@@ -10,7 +10,7 @@ COPY settings.gradle .
 COPY gradle ./gradle
 
 # Download the dependencies
-# RUN ./gradlew --version
+RUN gradle --version
 
 # Copy the application source code
 COPY src ./src
