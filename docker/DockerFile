@@ -9,6 +9,9 @@ COPY build.gradle .
 COPY settings.gradle .
 COPY gradle ./gradle
 
+# Install unzip
+RUN apt-get update && apt-get install -y unzip
+
 # Download the specified Gradle version
 RUN curl -s "https://services.gradle.org/distributions/gradle-7.6.1-bin.zip" -o gradle.zip \
     && unzip gradle.zip \
